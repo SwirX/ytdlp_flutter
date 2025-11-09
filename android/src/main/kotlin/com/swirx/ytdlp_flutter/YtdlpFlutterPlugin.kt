@@ -29,20 +29,21 @@ class YtdlpFlutterPlugin: FlutterPlugin, MethodCallHandler {
   }
 
   override fun onMethodCall(call: MethodCall, result: Result) {
-    if (call.method == "getAudioStream") {
-      val videoId = call.argument<String>('videoId');
-      try {
-        val py = Python.getInstance();
-        val pyModule = py.getModule('youtube_extractor')
-        var url = pyModule.callAttr('get_best_audio_stream', videoId).toString()
-        result.success(url)
-      } catch (e: Exception) {
-        result.error('PYTHON_ERROR', e.message, null)
-      }
-    } else {
-      result.NotImplemented()
+        when (call.method) {
+            "getAudioStream" -> {
+                val videoId = call.argument<String>("videoId")
+                try {
+                    val py = Python.getInstance()
+                    val pyModule = py.getModule("youtube_extractor")
+                    val url = pyModule.callAttr("get_best_audio_stream", videoId).toString()
+                    result.success(url)
+                } catch (e: Exception) {
+                    result.error("PYTHON_ERROR", e.message, null)
+                }
+            }
+            else -> result.notImplemented()
+        }
     }
-  }
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
     channel.setMethodCallHandler(null)
