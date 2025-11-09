@@ -27,6 +27,16 @@ apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 apply plugin: 'com.chaquo.python'
 
+chaquopy {
+    defaultConfig {
+        version "3.10"
+        buildPython "/home/swirx/.pyenv/versions/3.10.18/bin/python"
+        pip {
+            install "yt-dlp==2025.07.21"
+        }
+    }
+}
+
 android {
     namespace = "com.swirx.ytdlp_flutter"
 
@@ -68,16 +78,6 @@ android {
                outputs.upToDateWhen {false}
                showStandardStreams = true
             }
-        }
-    }
-}
-
-chaquopy {
-    defaultConfig {
-        version "3.10"
-        // buildPython "/home/swirx/.pyenv/versions/3.10.18/bin/python"  
-        pip {
-            install "yt-dlp==2025.07.21"
         }
     }
 }
