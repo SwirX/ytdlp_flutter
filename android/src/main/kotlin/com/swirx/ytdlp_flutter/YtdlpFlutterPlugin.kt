@@ -20,13 +20,14 @@ class YtdlpFlutterPlugin: FlutterPlugin, MethodCallHandler {
   private lateinit var channel : MethodChannel
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-      channel = MethodChannel(flutterPluginBinding.binaryMessenger, "ytdlp_flutter")
-      channel.setMethodCallHandler(this)
+        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "ytdlp_flutter")
+        channel.setMethodCallHandler(this)
 
-      if (!Python.isStarted()) {
-          Python.start(AndroidPlatform(flutterPluginBinding.applicationContext))
-      }
-  }
+        if (!Python.isStarted()) {
+            Python.start(AndroidPlatform(flutterPluginBinding.applicationContext))
+        }
+    }
+
 
   override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
@@ -35,7 +36,7 @@ class YtdlpFlutterPlugin: FlutterPlugin, MethodCallHandler {
                 try {
                     val py = Python.getInstance()
                     val pyModule = py.getModule("youtube_extractor")
-                    val url = pyModule.callAttr("get_best_audio_stream", videoId).toString()
+                    val url = pyModule.callAttr("get_best_audio_url", videoId).toString()
                     result.success(url)
                 } catch (e: Exception) {
                     result.error("PYTHON_ERROR", e.message, null)
@@ -44,6 +45,7 @@ class YtdlpFlutterPlugin: FlutterPlugin, MethodCallHandler {
             else -> result.notImplemented()
         }
     }
+
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
     channel.setMethodCallHandler(null)
